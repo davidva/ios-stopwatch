@@ -9,17 +9,45 @@
 import UIKit
 
 class ViewController: UIViewController {
+    var hiddenBtn: UIBarButtonItem!
+    
+    var stopwatch: Stopwatch!
+
+    @IBOutlet weak var time: UILabel!
+
+    @IBOutlet weak var toolbar: UIToolbar!
+
+    @IBAction func start(sender: UIBarButtonItem) {
+        stopwatch.start()
+        toggleButton()
+    }
+
+    @IBAction func pause(sender: UIBarButtonItem) {
+        toggleButton()
+        stopwatch.pause()
+    }
+
+    @IBAction func stop(sender: UIBarButtonItem) {
+        if stopwatch.isRunning() {
+            toggleButton()
+        }
+        stopwatch.stop()
+        time.text = "0"
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        stopwatch = Stopwatch(tickHandler: setCounter)
+        hiddenBtn = toolbar.items?.removeAtIndex(1) as? UIBarButtonItem
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func setCounter(value: Int) {
+        time.text = "\(value)"
     }
 
-
+    private func toggleButton() {
+        toolbar.items?.insert(hiddenBtn, atIndex: 0)
+        hiddenBtn = toolbar.items?.removeAtIndex(1) as? UIBarButtonItem
+    }
 }
 
